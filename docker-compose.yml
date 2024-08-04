@@ -1,0 +1,39 @@
+version: '2.1'
+
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    networks:
+      - my-network
+    ports:
+      - '27017:27017'
+    volumes:
+      - dbdata6:/data/db
+
+  orders:
+    container_name: orders
+    build: 
+      context: ./orders
+      dockerfile: Dockerfile
+    networks:
+      - my-network
+    depends_on:
+      - mongodb
+
+  gateway:
+    container_name: gateway
+    ports:
+      - '8080:8080'
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    networks:
+      - my-network
+      
+networks:
+  my-network:
+    driver: bridge
+
+volumes:
+  dbdata6:
